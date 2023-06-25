@@ -1,0 +1,103 @@
+//Problem
+/*Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
+You may assume that each input would have exactly one solution, and you may not use the same element twice.
+You can return the answer in any order.
+
+Example 1:
+Input: nums = [2,7,11,15], target = 9
+Output: [0,1]
+Explanation: Because nums[0] + nums[1] == 9, we return [0, 1].
+
+Example 2:
+Input: nums = [3,2,4], target = 6
+Output: [1,2]
+
+Example 3:
+Input: nums = [3,3], target = 6
+Output: [0,1]
+ 
+Constraints:
+
+2 <= nums.length <= 104
+-109 <= nums[i] <= 109
+-109 <= target <= 109
+Only one valid answer exists.
+ 
+
+Follow-up: Can you come up with an algorithm that is less than O(n2) time complexity?*/
+
+//Solutions
+/*Intuition
+The code aims to solve the "two-sum" problem, which involves finding a pair of numbers in an input vector that add up to a given target value.
+The algorithm utilizes an unordered_map data structure to store the elements of the input vector and their corresponding indices. This data structure allows for efficient lookup of elements based on their values.
+
+Approach
+Here's the approach of the given code:
+The code aims to find a pair of numbers in the input vector that add up to a given target value. It follows the following approach:
+
+Create an empty vector called ans to store the indices of the two numbers that add up to the target.
+
+Create an unordered_map called ourmap to store the elements of the input vector as keys and their indices as values. This mapping allows for efficient lookup of elements based on their values.
+
+Iterate over the input vector nums using a for loop. For each element nums[i] at index i:
+
+Insert the element nums[i] into the unordered_map ourmap, with the index i as the corresponding value. This step creates a mapping of each element to its index for easy retrieval.
+Iterate over the input vector nums again using a for loop. For each element nums[i] at index i:
+
+Calculate the difference findnum between the target value and the current element, i.e., findnum = target - nums[i].
+Check if findnum exists in the unordered_map using the find function:
+If findnum exists and the index stored in ourmap[findnum] is not equal to i:
+Add the current index i to the answer vector ans, representing the index of the first number in the pair.
+Add the index ourmap[findnum] to the answer vector ans, representing the index of the second number in the pair.
+Break out of the loop, as the problem only requires finding one valid pair.
+Return the answer vector ans, which contains the indices of the two numbers that add up to the target value.
+
+In summary, the approach of the code involves using an unordered_map to store the elements of the input vector and their indices. By iterating over the vector twice, it checks for pairs of numbers that add up to the target value and returns the indices of the first valid pair found.
+
+Complexity
+Time complexity:
+The given code is an implementation of the "two-sum" problem, where we need to find two numbers in the input vector that add up to the target value. Let's analyze its time and space complexity.
+Time Complexity:
+
+Building the unordered_map: In the first for loop, we iterate through the input vector nums of size n. The ourmap[nums[i]] = i operation takes constant time on average for inserting elements into an unordered map. Therefore, this loop has a time complexity of O(n).
+
+Searching for the target numbers: In the second for loop, we again iterate through the input vector nums of size n. For each element nums[i], we calculate the difference findnum = target - nums[i] and then perform a lookup operation in the unordered_map using ourmap.find(findnum). The average time complexity of the find operation in an unordered_map is O(1). Therefore, the time complexity of this loop is also O(n).
+
+Overall, the time complexity of the code is O(n).
+
+Space complexity:
+unordered_map: We use an unordered_map named ourmap to store the elements of the input vector as keys and their indices as values. The space required for this unordered_map depends on the number of distinct elements in the input vector. In the worst case, if all elements are distinct, the space complexity would be O(n) to store all elements.
+
+ans vector: We use a vector named ans to store the indices of the two numbers that add up to the target. The maximum size of this vector would be 2 since we are looking for a pair of numbers. Therefore, the space complexity of this vector is O(1).
+
+Other than these data structures, we have a few integer variables which require constant space.
+
+Overall, the space complexity of the code is O(n) in the worst case due to the unordered_map.
+
+Note: If we are considering the space complexity without considering the input and output, the space complexity would be O(1) as the space used by the input and output is not part of the algorithm itself.
+*/
+
+//Code
+
+#include<unordered_map>
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        vector<int> ans;
+        unordered_map<int,int> ourmap;
+        for(int i=0;i<nums.size();i++){
+            ourmap[nums[i]] = i;
+        }
+        for(int i=0;i<nums.size();i++){
+            int findnum = target-nums[i];
+            if(ourmap.find(findnum)!=ourmap.end()){
+                if(ourmap[findnum]!=i){
+                    ans.push_back(i);
+                    ans.push_back(ourmap[findnum]);
+                    break;
+                }
+            }
+        }
+        return ans;
+    }
+};
