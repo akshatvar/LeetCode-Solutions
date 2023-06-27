@@ -1,0 +1,97 @@
+/*Given a string s, find the length of the longest substring without repeating characters.
+
+Example 1:
+Input: s = "abcabcbb"
+Output: 3
+Explanation: The answer is "abc", with the length of 3.
+
+Example 2:
+Input: s = "bbbbb"
+Output: 1
+Explanation: The answer is "b", with the length of 1.
+
+Example 3:
+Input: s = "pwwkew"
+Output: 3
+Explanation: The answer is "wke", with the length of 3.
+Notice that the answer must be a substring, "pwke" is a subsequence and not a substring.
+Constraints:
+
+0 <= s.length <= 5 * 104
+s consists of English letters, digits, symbols and spaces.*/
+
+//Solution
+
+/*Intuition
+The problem is to find the length of the longest substring without repeating characters in a given string.
+
+To solve this problem, we can utilize a sliding window approach. We maintain a window that contains a substring without any repeating characters. The window starts from the leftmost character and expands to the right until we encounter a repeating character. When a repeating character is found, we update the window by shifting the left pointer to the right of the last occurrence of that character, ensuring that we have a new window without any repeating characters.
+
+Approach
+Here's an explanation of the approach used in the corrected code:
+
+We initialize an unordered map, ourmap, to store the last occurrence index of each character encountered.
+
+We also initialize variables count_max, count, left, and right:
+
+count_max keeps track of the maximum length of the substring without repeating characters encountered so far.
+count stores the length of the current substring without repeating characters.
+left and right are pointers that define the current substring.
+We iterate through the input string s using the right pointer until it reaches the end of the string:
+
+If the character s[right] is not found in ourmap or its last occurrence index is outside the current substring (before left):
+We update ourmap[s[right]] with the current index right.
+We increment count by 1 since we have a new non-repeating character in the substring.
+We update count_max if the current count is greater than count_max.
+We move the right pointer one step forward.
+If the character s[right] is already present in the current substring (repeating character):
+We update left to the index after the last occurrence of s[right].
+We update ourmap[s[right]] with the current index right.
+We move the right pointer one step forward.
+After iterating through the entire string, we return count_max, which represents the length of the longest substring without repeating characters.
+
+The approach utilizes a sliding window technique to maintain the current substring without repeating characters. By keeping track of the last occurrence index of each character in the ourmap unordered map, we can efficiently update the left pointer whenever a repeating character is encountered.
+
+Overall, this approach allows us to find the length of the longest substring without repeating characters in a time complexity of O(n), where n is the length of the input string.
+
+Complexity
+Time complexity:
+The time and space complexity of the corrected code for finding the length of the longest substring without repeating characters are as follows:
+
+Time Complexity: O(n)
+The code iterates through the input string s exactly once with the help of two pointers, left and right. Each character is visited and processed once. Therefore, the time complexity is linear with respect to the length of the input string, which is O(n).
+
+Space complexity:
+Space Complexity: O(min(n, m))
+The code uses an unordered map ourmap to store the last occurrence index of each character. The space used by ourmap depends on the number of distinct characters encountered within the current substring. In the worst case, where all characters in the input string are distinct, the space complexity will be O(n). However, in practice, the space complexity is often limited by the size of the character set. So, if the character set has a fixed size of m, the space complexity will be O(min(n, m)), as the number of distinct characters encountered cannot exceed m.
+
+Overall, the time complexity is O(n), and the space complexity is O(min(n, m)), where n is the length of the input string and m is the size of the character set.*/
+
+//code
+
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        unordered_map<char,int> ourmap;
+        int count_max = 0;
+        int count = 0;
+        int left = 0;
+        int right = 0;
+        while(right!=s.size()){
+            if(ourmap.find(s[right])==ourmap.end() || ourmap[s[right]]<left){
+                // If the character is not present in the current substring
+                // or its last occurrence is outside the current substring.
+                count = right - left + 1;
+                count_max = max(count,count_max);
+                ourmap[s[right]] = right;
+                right++;
+            }else{
+                // If the character is already present in the current substring.
+                left = ourmap[s[right]]+1;
+                ourmap[s[right]] = right;
+                right++;
+            }
+        }
+        return count_max;
+    }
+};
